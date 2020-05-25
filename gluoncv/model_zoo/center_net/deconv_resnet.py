@@ -1,7 +1,7 @@
 """ResNet with Deconvolution layers for CenterNet object detection."""
 # pylint: disable=unused-argument
 from __future__ import absolute_import
-
+import os
 import warnings
 import math
 
@@ -72,10 +72,10 @@ class DeconvResnet(nn.HybridBlock):
     def __init__(self, base_network='resnet18_v1b',
                  deconv_filters=(256, 128, 64), deconv_kernels=(4, 4, 4),
                  pretrained_base=True, norm_layer=nn.BatchNorm, norm_kwargs=None,
-                 use_dcnv2=False, **kwargs):
+                 root=os.path.join('~', '.mxnet', 'models'), use_dcnv2=False, **kwargs):
         super(DeconvResnet, self).__init__(**kwargs)
         assert 'resnet' in base_network
-        net = get_model(base_network, pretrained=pretrained_base)
+        net = get_model(base_network, pretrained=pretrained_base, root=root)
         self._norm_layer = norm_layer
         self._norm_kwargs = norm_kwargs if norm_kwargs is not None else {}
         self._use_dcnv2 = use_dcnv2
@@ -164,7 +164,7 @@ class DeconvResnet(nn.HybridBlock):
         out = self.deconv(y)
         return out
 
-def get_deconv_resnet(base_network, pretrained=False, ctx=cpu(), use_dcnv2=False, **kwargs):
+def get_deconv_resnet(base_network, pretrained=False, ctx=cpu(), use_dcnv2=False, root=os.path.join('~', '.mxnet', 'models'), **kwargs):
     """Get resnet with deconv layers.
 
     Parameters
@@ -186,7 +186,7 @@ def get_deconv_resnet(base_network, pretrained=False, ctx=cpu(), use_dcnv2=False
 
     """
     net = DeconvResnet(base_network=base_network, pretrained_base=pretrained,
-                       use_dcnv2=use_dcnv2, **kwargs)
+                       use_dcnv2=use_dcnv2, root=root, **kwargs)
     with warnings.catch_warnings(record=True) as _:
         warnings.simplefilter("always")
         net.initialize()

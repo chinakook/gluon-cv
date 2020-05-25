@@ -1,7 +1,7 @@
 """MobileNet variants with DUC upsampling layers for CenterNet object detection."""
 # pylint: disable=unused-argument
 from __future__ import absolute_import
-
+import os
 import warnings
 
 from mxnet.context import cpu
@@ -34,12 +34,12 @@ class DUCMobilenet(nn.HybridBlock):
     """
     def __init__(self, base_network='mobilenetv3_small',
                  up_filters=(512, 256, 128), up_scales=(2, 2, 2),
-                 pretrained_base=True, norm_layer=nn.BatchNorm, norm_kwargs=None, **kwargs):
+                 pretrained_base=True, norm_layer=nn.BatchNorm, norm_kwargs=None, root=os.path.join('~', '.mxnet', 'models'), **kwargs):
         super(DUCMobilenet, self).__init__(**kwargs)
         if norm_layer != nn.BatchNorm:
             raise NotImplementedError('Only standard BatchNorm layer is supported in DUC module')
         assert 'mobilenet' in base_network
-        net = get_model(base_network, pretrained=pretrained_base)
+        net = get_model(base_network, pretrained=pretrained_base, root=root)
         feat = net.features
         idx = [type(l) for l in feat].index(nn.conv_layers.GlobalAvgPool2D)
         with self.name_scope():
@@ -55,7 +55,7 @@ class DUCMobilenet(nn.HybridBlock):
         return out
 
 
-def get_duc_mobilenet(base_network, pretrained=False, ctx=cpu(), **kwargs):
+def get_duc_mobilenet(base_network, pretrained=False, ctx=cpu(), root=os.path.join('~', '.mxnet', 'models'), **kwargs):
     """Get mobilenet with duc upsampling layers.
 
     Parameters
@@ -72,7 +72,7 @@ def get_duc_mobilenet(base_network, pretrained=False, ctx=cpu(), **kwargs):
         Network instance of mobilenet with duc upsampling layers
 
     """
-    net = DUCMobilenet(base_network=base_network, pretrained_base=pretrained, **kwargs)
+    net = DUCMobilenet(base_network=base_network, pretrained_base=pretrained, root=root, **kwargs)
     with warnings.catch_warnings(record=True) as _:
         warnings.simplefilter("always")
         net.initialize()

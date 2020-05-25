@@ -518,7 +518,7 @@ def custom_faster_rcnn_fpn(classes, transfer=None, dataset='custom', pretrained_
                            base_network_name='resnet18_v1b', norm_layer=nn.BatchNorm,
                            norm_kwargs=None, sym_norm_layer=None, sym_norm_kwargs=None,
                            num_fpn_filters=256, num_box_head_conv=4, num_box_head_conv_filters=256,
-                           num_box_head_dense_filters=1024, **kwargs):
+                           num_box_head_dense_filters=1024, root='~/.mxnet/models', **kwargs):
     r"""Faster RCNN model with resnet base network and FPN on custom dataset.
 
     Parameters
@@ -573,7 +573,7 @@ def custom_faster_rcnn_fpn(classes, transfer=None, dataset='custom', pretrained_
         features, top_features, box_features = \
             custom_rcnn_fpn(pretrained_base, base_network_name, norm_layer, norm_kwargs,
                             sym_norm_layer, sym_norm_kwargs, num_fpn_filters, num_box_head_conv,
-                            num_box_head_conv_filters, num_box_head_dense_filters)
+                            num_box_head_conv_filters, num_box_head_dense_filters, root=root)
         return get_faster_rcnn(
             name='fpn_' + base_network_name, dataset=dataset, features=features,
             top_features=top_features, classes=classes, box_features=box_features,

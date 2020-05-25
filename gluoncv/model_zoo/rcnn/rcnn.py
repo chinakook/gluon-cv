@@ -264,7 +264,7 @@ class RCNN(gluon.HybridBlock):
 def custom_rcnn_fpn(pretrained_base=True, base_network_name='resnet18_v1b', norm_layer=nn.BatchNorm,
                     norm_kwargs=None, sym_norm_layer=None, sym_norm_kwargs=None,
                     num_fpn_filters=256, num_box_head_conv=4, num_box_head_conv_filters=256,
-                    num_box_head_dense_filters=1024):
+                    num_box_head_dense_filters=1024, root='~/.mxnet/models', **kwargs):
     r"""Generate custom RCNN model with resnet base network w/FPN.
 
     Parameters
@@ -306,35 +306,35 @@ def custom_rcnn_fpn(pretrained_base=True, base_network_name='resnet18_v1b', norm
     use_global_stats = norm_layer is nn.BatchNorm
     if base_network_name == 'resnet18_v1b':
         from ...model_zoo.resnetv1b import resnet18_v1b
-        base_network = resnet18_v1b(pretrained=pretrained_base, dilated=False,
+        base_network = resnet18_v1b(pretrained=pretrained_base, dilated=False, root=root,
                                     use_global_stats=use_global_stats, norm_layer=norm_layer,
                                     norm_kwargs=norm_kwargs)
         fpn_inputs_names = ['layers1_relu3_fwd', 'layers2_relu3_fwd', 'layers3_relu3_fwd',
                             'layers4_relu3_fwd']
     elif base_network_name == 'resnet50_v1b':
         from ...model_zoo.resnetv1b import resnet50_v1b
-        base_network = resnet50_v1b(pretrained=pretrained_base, dilated=False,
+        base_network = resnet50_v1b(pretrained=pretrained_base, dilated=False, root=root,
                                     use_global_stats=use_global_stats, norm_layer=norm_layer,
                                     norm_kwargs=norm_kwargs)
         fpn_inputs_names = ['layers1_relu8_fwd', 'layers2_relu11_fwd', 'layers3_relu17_fwd',
                             'layers4_relu8_fwd']
     elif base_network_name == 'resnet101_v1d':
         from ...model_zoo.resnetv1b import resnet101_v1d
-        base_network = resnet101_v1d(pretrained=pretrained_base, dilated=False,
+        base_network = resnet101_v1d(pretrained=pretrained_base, dilated=False, root=root,
                                      use_global_stats=use_global_stats, norm_layer=norm_layer,
                                      norm_kwargs=norm_kwargs)
         fpn_inputs_names = ['layers1_relu8_fwd', 'layers2_relu11_fwd', 'layers3_relu68_fwd',
                             'layers4_relu8_fwd']
     elif base_network_name == 'resnest50':
         from ...model_zoo.resnest import resnet50
-        base_network = resnet50(pretrained=pretrained_base, dilated=False,
+        base_network = resnet50(pretrained=pretrained_base, dilated=False, root=root,
                                 use_global_stats=use_global_stats, norm_layer=norm_layer,
                                 norm_kwargs=norm_kwargs)
         fpn_inputs_names = ['layers1_relu11_fwd', 'layers2_relu15_fwd', 'layers3_relu23_fwd',
                             'layers4_relu11_fwd']
     elif base_network_name == 'resnest101':
         from ...model_zoo.resnest import resnest101
-        base_network = resnest101(pretrained=pretrained_base, dilated=False,
+        base_network = resnest101(pretrained=pretrained_base, dilated=False, root=root,
                                   use_global_stats=use_global_stats, norm_layer=norm_layer,
                                   norm_kwargs=norm_kwargs)
         fpn_inputs_names = ['layers1_relu11_fwd', 'layers2_relu15_fwd', 'layers3_relu91_fwd',
