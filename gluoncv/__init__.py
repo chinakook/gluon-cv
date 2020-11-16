@@ -12,7 +12,7 @@ _deprecate_python2()
 
 # optionally depend on mxnet or pytorch
 try:
-    _require_mxnet_version('1.4.0', '2.0.0')
+    # _require_mxnet_version('1.4.0', '2.0.0')
     from . import data
     from . import model_zoo
     from . import nn
@@ -20,7 +20,7 @@ try:
     from . import loss
 except ImportError:
     try:
-        _require_pytorch_version('1.4.0', '2.0.0')
+        # _require_pytorch_version('1.4.0', '2.0.0')
         from .torch import data
         from .torch import model_zoo
         from .torch import utils

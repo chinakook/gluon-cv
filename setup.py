@@ -57,14 +57,14 @@ requirements = [
     'portalocker',
     'Pillow',
     'scipy',
-    'tensorboardx',
-    'decord',
+    # 'tensorboardx',
+    # 'decord',
     'opencv-python',
     'yacs',
     'pandas',
     'pyyaml',
     'autocfg',
-    'autogluon.core'
+    #'autogluon.core'
 ]
 
 if with_cython:
