@@ -399,6 +399,14 @@ class FasterRCNNTrainBatchify(object):
         self._label_pad = Pad(pad_val=-1, num_shards=num_shards, ret_length=False)
         self.NUM_ELEMENTS = 5
 
+    def __getstate__(self):
+        return self._num_shards, self._img_pad, self._label_pad, self.NUM_ELEMENTS, \
+                [x.tojson(remove_amp_cast=False) for x in self._feat_sym]
+
+    def __setstate__(self, state):
+        self._num_shards, self._img_pad, self._label_pad, self.NUM_ELEMENTS, json_strs = state
+        self._feat_sym = tuple([mx.symbol.load_json(x) for x in json_strs])
+
     def __call__(self, data):
         """Batchify the input data.
         Parameters
