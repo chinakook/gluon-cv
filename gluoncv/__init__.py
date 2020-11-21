@@ -19,11 +19,12 @@ try:
     from . import utils
     from . import loss
 except ImportError:
-    try:
-        # _require_pytorch_version('1.4.0', '2.0.0')
-        from .torch import data
-        from .torch import model_zoo
-        from .torch import utils
-    except ImportError:
-        raise ImportError('Unable to import modules due to missing `mxnet` & `torch`. '
-                          'You should install at least one deep learning framework.')
+    pass
+    # try:
+    #     # _require_pytorch_version('1.4.0', '2.0.0')
+    #     from .torch import data
+    #     from .torch import model_zoo
+    #     from .torch import utils
+    # except ImportError:
+    #     raise ImportError('Unable to import modules due to missing `mxnet` & `torch`. '
+    #                       'You should install at least one deep learning framework.')
