@@ -192,8 +192,8 @@ def batch_fn(batch, ctx):
 
 
 def test(ctx, val_data, opt, net):
-    acc_top1 = mx.gluon.metric.Accuracy()
-    acc_top5 = mx.gluon.metric.TopKAccuracy(5)
+    acc_top1 = mx.metric.Accuracy()
+    acc_top5 = mx.metric.TopKAccuracy(5)
 
     for i, batch in enumerate(val_data):
         data, label = batch_fn(batch, ctx)

@@ -336,8 +336,8 @@ def train_gluon():
         save_frequency = 0
 
     def evaluate(epoch):
-        acc_top1 = mx.gluon.metric.Accuracy()
-        acc_top5 = mx.gluon.metric.TopKAccuracy(5)
+        acc_top1 = mx.metric.Accuracy()
+        acc_top5 = mx.metric.TopKAccuracy(5)
         for _, batch in enumerate(val_data):
             data, label = val_batch_fn(batch, context)
             output = net(data.astype(args.dtype, copy=False))
@@ -409,9 +409,9 @@ def train_gluon():
     else:
         loss_fn = gluon.loss.SoftmaxCrossEntropyLoss(sparse_label=sparse_label_loss)
     if args.mixup:
-        train_metric = mx.gluon.metric.RMSE()
+        train_metric = mx.metric.RMSE()
     else:
-        train_metric = mx.gluon.metric.Accuracy()
+        train_metric = mx.metric.Accuracy()
 
     def mixup_transform(label, classes, lam=1, eta=0.0):
         if isinstance(label, mx.nd.NDArray):
