@@ -160,6 +160,8 @@ class SSDDefaultTrainTransform(object):
         # random color jittering
         img = experimental.image.random_color_distort(src)
 
+        neg_mask = label[:, 4] == -1
+
         # random expansion with prob 0.5
         if np.random.uniform(0, 1) > 0.5:
             img, expand = timage.random_expand(img, fill=[m * 255 for m in self._mean])
@@ -167,11 +169,15 @@ class SSDDefaultTrainTransform(object):
         else:
             img, bbox = img, label
 
+        bbox[neg_mask, :4] = -1
+
         # random cropping
         h, w, _ = img.shape
         bbox, crop = experimental.bbox.random_crop_with_constraints(bbox, (w, h))
         x0, y0, w, h = crop
         img = mx.image.fixed_crop(img, x0, y0, w, h)
+
+        neg_mask2 = bbox[:, 4] == -1
 
         # resize with random interpolation
         h, w, _ = img.shape
@@ -183,6 +189,8 @@ class SSDDefaultTrainTransform(object):
         h, w, _ = img.shape
         img, flips = timage.random_flip(img, px=0.5)
         bbox = tbbox.flip(bbox, (w, h), flip_x=flips[0])
+
+        bbox[neg_mask2, :4] = -1
 
         # to tensor
         img = mx.nd.image.to_tensor(img)
@@ -222,10 +230,15 @@ class SSDDefaultValTransform(object):
 
     def __call__(self, src, label):
         """Apply transform to validation image/label."""
+
+        neg_mask = label[:, 4] == -1
+
         # resize
         h, w, _ = src.shape
         img = timage.imresize(src, self._width, self._height, interp=9)
         bbox = tbbox.resize(label, in_size=(w, h), out_size=(self._width, self._height))
+
+        bbox[neg_mask, :4] = -1
 
         img = mx.nd.image.to_tensor(img)
         img = mx.nd.image.normalize(img, mean=self._mean, std=self._std)

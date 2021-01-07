@@ -44,6 +44,10 @@ class SSDTargetGenerator(Block):
         anchors = self._center_to_corner(anchors.reshape((-1, 4)))
         ious = nd.transpose(nd.contrib.box_iou(anchors, gt_boxes), (1, 0, 2))
         matches = self._matcher(ious)
+
+        if gt_ids[0,0,0].asscalar() < 0:
+            matches = nd.ones_like(matches) * -1
+            
         if self._use_negative_sampling:
             samples = self._sampler(matches, cls_preds, ious)
         else:
